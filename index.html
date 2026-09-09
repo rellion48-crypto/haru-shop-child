@@ -56,13 +56,13 @@
 <main><div class="wrap">
   <div class="section-header">
     <div>
-      <h2>오늘의 물건</h2>
-      <p class="lead">하나씩 눌러 자세한 이야기와 관리법을 살펴보세요.</p>
+      <h2>오늘의 간편식 메뉴</h2>
+      <p class="lead">재료 손질 없이 냄비에 넣고 끓이기만 하면 완성되는 따뜻한 밀키트입니다.</p>
     </div>
     <div class="category-pills">
-      <button class="pill active" data-filter="all">전체 상품</button>
-      <button class="pill" data-filter="kitchen">주방·살림</button>
-      <button class="pill" data-filter="living">생활·서재</button>
+      <button class="pill active" data-filter="all">전체 메뉴</button>
+      <button class="pill" data-filter="soup">국물·찌개</button>
+      <button class="pill" data-filter="dish">요리·분식</button>
     </div>
   </div>
   <div class="grid" id="product-list"></div>
@@ -86,10 +86,10 @@
           if (filter === "all") {
             card.style.display = "";
             card.style.animation = "cardFadeIn 0.35s ease forwards";
-          } else if (filter === "kitchen" && (text.includes("주전자") || text.includes("앞치마") || text.includes("도마") || text.includes("행주") || text.includes("찌개") || text.includes("전골"))) {
+          } else if (filter === "soup" && (text.includes("찌개") || text.includes("전골"))) {
             card.style.display = "";
             card.style.animation = "cardFadeIn 0.35s ease forwards";
-          } else if (filter === "living" && (text.includes("문진") || text.includes("초") || text.includes("떡볶이") || text.includes("닭갈비"))) {
+          } else if (filter === "dish" && (text.includes("떡볶이") || text.includes("닭갈비"))) {
             card.style.display = "";
             card.style.animation = "cardFadeIn 0.35s ease forwards";
           } else {
