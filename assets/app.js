@@ -182,6 +182,29 @@ function paintCheckout() {
   if (sum) sum.textContent = won(Cart.total());
 
   // ▼ 여기에 「결제를 시작했다」를 알리는 코드가 들어갑니다 — 결제 화면이 열려 다 그려진 직후이며, 아래 제출 버튼을 누른 때가 아닙니다 (뒤 수업에서)
+  // 통로가 이미 있으면 그대로 쓰고, 없을 때만 새로 만든다
+  window.dataLayer = window.dataLayer || [];
+  // 앞에서 넣은 상품 값이 섞이지 않게 먼저 비운다
+  dataLayer.push({ ecommerce: null });
+  // 통로 끝에 한 덩어리를 넣는다 - 넣는 순간이 태그 관리자가 듣는 순간
+  dataLayer.push({
+    // 무슨 일이 일어났나 - 계획서 이름 글자 그대로
+    event: "begin_checkout",
+    // free_shipping은 ecommerce 밖, event와 같은 레벨
+    free_shipping: Cart.total() >= 50000 ? "yes" : "no",
+    // 같이 보내는 상품 값 묶음
+    ecommerce: {
+      // 어느 나라 돈인가
+      currency: "KRW",
+      // 금액 - 상품 가격 × 수량의 합, 배송비는 넣지 않는다
+      value: Cart.total(),
+      // 장바구니에 담긴 상품을 상자 하나씩 목록에 넣는다
+      items: Cart.read().map(i => {
+        const p = findProduct(i.id);
+        return p ? { item_id: p.id, item_name: p.name, price: p.price, quantity: i.qty } : null;
+      }).filter(Boolean)
+    }
+  });
 
   form.addEventListener("submit", e => {
     e.preventDefault();
