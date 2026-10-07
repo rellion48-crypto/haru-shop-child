@@ -46,6 +46,7 @@
         <a href="about.html">가게 소개</a>
         <a href="shipping.html">배송·교환</a>
         <a href="cart.html">장바구니<span class="cart-count">0</span></a>
+        <span class="auth-nav" id="auth-nav"></span>
       </nav>
     </div>
   </header>
@@ -146,6 +147,7 @@
     const app = initializeApp(firebaseConfig);
     console.log("Firebase 연결:", app.options.projectId);
   </script>
+<script type="module" src="assets/auth.js"></script>
 </body>
 
 </html>

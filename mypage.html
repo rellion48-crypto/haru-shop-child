@@ -15,12 +15,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','GTM-N3T4GNMF');</script>
 <!-- End Google Tag Manager -->
 
-<title>상품 — 하루상점</title>
-<meta name="description" content="상품을 자세히 봅니다">
+<title>마이페이지 — 하루상점</title>
 <link rel="stylesheet" href="assets/style.css">
 
 </head>
-<body>
+<body data-require-login>
 
 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-N3T4GNMF"
@@ -38,8 +37,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </nav>
 </div></header>
 
-<main><div class="wrap">
-  <div class="detail" id="product-detail"></div>
+<!-- 로그인 확인이 끝나기 전에는 숨겨 둔다 (assets/auth.js 가 보여 준다) -->
+<main hidden data-auth-gate><div class="wrap">
+  <h2>마이페이지</h2>
+  <p class="lead">로그인한 이메일</p>
+  <p><strong id="mypage-email" data-auth-email></strong></p>
+  <button class="btn" type="button" data-logout>로그아웃</button>
 </div></main>
 <footer class="site"><div class="wrap"></div></footer>
 <script src="assets/shop.js"></script>

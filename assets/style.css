@@ -800,3 +800,37 @@ footer.site {
     align-items: flex-start;
   }
 }
+
+/* 헤더의 로그인 상태 (assets/auth.js 가 채운다) */
+.auth-nav {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+.auth-email {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+  color: var(--sub);
+}
+.auth-logout {
+  background: none;
+  border: 0;
+  padding: 6px 4px;
+  font: inherit;
+  color: var(--sub);
+  cursor: pointer;
+}
+.auth-logout:hover {
+  color: var(--ink);
+}
+@media (max-width: 768px) {
+  .auth-nav {
+    gap: 12px;
+  }
+  .auth-email {
+    max-width: 110px;
+  }
+}

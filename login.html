@@ -43,6 +43,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <a href="about.html">가게 소개</a>
         <a href="shipping.html">배송·교환</a>
         <a href="cart.html">장바구니</a>
+        <span class="auth-nav" id="auth-nav"></span>
       </nav>
     </div>
   </header>
@@ -122,6 +123,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       try {
         const cred = await signInWithEmailAndPassword(auth, emailInput.value.trim(), passwordInput.value);
         show("로그인 완료: " + cred.user.email, false);
+        // mypage.html 에서 돌려보내졌으면 원래 가려던 화면으로 보낸다 (같은 사이트의 .html 이름만 허용)
+        const next = new URLSearchParams(location.search).get("next");
+        if (next && /^[\w-]+\.html$/.test(next)) location.href = next;
       } catch (err) {
         showError(err);
       }
@@ -136,6 +140,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       }
     });
   </script>
+  <script type="module" src="assets/auth.js"></script>
 </body>
 
 </html>
