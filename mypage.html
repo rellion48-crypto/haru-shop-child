@@ -42,6 +42,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <h2>마이페이지</h2>
   <p class="lead">로그인한 이메일</p>
   <p><strong id="mypage-email" data-auth-email></strong></p>
+  <!-- 이메일 인증이 안 된 계정에만 보인다 (assets/auth.js 가 열 때마다 확인한다) -->
+  <div data-verify-box hidden>
+    <p class="lead">이메일 인증이 아직 안 됐습니다. 메일함의 인증 링크를 눌러 주세요.</p>
+    <button class="btn" type="button" data-resend-verify>인증 메일 다시 보내기</button>
+    <p data-verify-msg role="status"></p>
+  </div>
   <button class="btn" type="button" data-logout>로그아웃</button>
 </div></main>
 <footer class="site"><div class="wrap"></div></footer>

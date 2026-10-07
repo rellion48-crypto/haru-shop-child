@@ -72,6 +72,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       getAuth,
       createUserWithEmailAndPassword,
       signInWithEmailAndPassword,
+      sendEmailVerification,
       signOut
     } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
 
@@ -115,6 +116,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           // 가입 방법 - 이메일
           method: "email"
         });
+        // 인증 메일을 한국어로 보내고, 보내기가 끝난 뒤에 안내를 보여 준다
+        try {
+          auth.languageCode = "ko";
+          await sendEmailVerification(cred.user);
+          show("인증 메일을 보냈습니다. 메일함과 스팸함을 확인해 주세요.", false);
+        } catch (mailErr) {
+          showError(mailErr);
+        }
       } catch (err) {
         showError(err);
       }
