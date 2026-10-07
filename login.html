@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="ko">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>로그인</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <style>
+    .login-box { max-width: 360px; margin: 48px auto; padding: 0 16px; }
+    .login-box label { display: block; margin-top: 16px; font-weight: 600; }
+    .login-box input { width: 100%; box-sizing: border-box; margin-top: 6px; padding: 10px; font-size: 16px; }
+    .login-actions { display: flex; gap: 8px; margin-top: 20px; }
+    .login-actions button { flex: 1; padding: 10px; font-size: 16px; cursor: pointer; }
+    #auth-message { margin-top: 20px; min-height: 1.5em; }
+    #auth-message.error { color: #c0392b; }
+  </style>
+</head>
+
+<body>
+  <header class="site">
+    <div class="wrap">
+      <a class="brand" href="index.html">간편한 식사(간식)</a>
+      <nav class="site">
+        <a href="index.html">상품</a>
+        <a href="about.html">가게 소개</a>
+        <a href="shipping.html">배송·교환</a>
+        <a href="cart.html">장바구니</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <form class="login-box" id="auth-form" novalidate>
+      <h1>로그인</h1>
+      <label for="email">이메일</label>
+      <input id="email" type="email" autocomplete="email">
+      <label for="password">비밀번호</label>
+      <input id="password" type="password" autocomplete="current-password">
+      <div class="login-actions">
+        <button type="button" id="btn-signup">가입</button>
+        <button type="submit" id="btn-login">로그인</button>
+        <button type="button" id="btn-logout">로그아웃</button>
+      </div>
+      <p id="auth-message" role="status"></p>
+    </form>
+  </main>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+    import {
+      getAuth,
+      createUserWithEmailAndPassword,
+      signInWithEmailAndPassword,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+
+    // index.html 에 있는 설정과 같은 값
+    const firebaseConfig = {
+      apiKey: "AIzaSyAopBL38Hpv4C7VIDG1Od8V6DGPh6wc1Ws",
+      authDomain: "gansik-shop.firebaseapp.com",
+      projectId: "gansik-shop",
+      storageBucket: "gansik-shop.firebasestorage.app",
+      messagingSenderId: "860199711922",
+      appId: "1:860199711922:web:1f268269d214a3b3fc45ab"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
+    const message = document.getElementById("auth-message");
+
+    function show(text, isError) {
+      message.textContent = text;
+      message.className = isError ? "error" : "";
+    }
+
+    function showError(err) {
+      // 화면에는 오류 코드(auth/...)만 보여 준다
+      show(err && err.code ? err.code : "오류가 발생했습니다", true);
+    }
+
+    document.getElementById("btn-signup").addEventListener("click", async () => {
+      try {
+        const cred = await createUserWithEmailAndPassword(auth, emailInput.value.trim(), passwordInput.value);
+        show("가입 완료: " + cred.user.email, false);
+      } catch (err) {
+        showError(err);
+      }
+    });
+
+    document.getElementById("auth-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      try {
+        const cred = await signInWithEmailAndPassword(auth, emailInput.value.trim(), passwordInput.value);
+        show("로그인 완료: " + cred.user.email, false);
+      } catch (err) {
+        showError(err);
+      }
+    });
+
+    document.getElementById("btn-logout").addEventListener("click", async () => {
+      try {
+        await signOut(auth);
+        show("로그아웃 완료", false);
+      } catch (err) {
+        showError(err);
+      }
+    });
+  </script>
+</body>
+
+</html>
