@@ -28,6 +28,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     .login-note { margin-top: 12px; font-size: 12px; color: #6b7280; }
     #auth-message { margin-top: 20px; min-height: 1.5em; }
     #auth-message.error { color: #c0392b; }
+    #login-rate-message { margin: 12px 0 0; color: #c0392b; }
+    .field-highlight { outline: 2px solid #c0392b; outline-offset: 2px; }
   </style>
 </head>
 
@@ -63,6 +65,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <button type="submit" id="btn-login">로그인</button>
         <button type="button" id="btn-logout">로그아웃</button>
       </div>
+      <p id="login-rate-message" role="status"></p>
       <p class="login-reset"><a href="#" id="link-reset">비밀번호를 잊으셨나요?</a></p>
       <p class="login-note">도서관이나 학교처럼 같이 쓰는 컴퓨터에서는, 간식상점을 다 보신 뒤 로그아웃을 눌러 주세요.</p>
       <p id="auth-message" role="status"></p>
@@ -100,11 +103,24 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     function show(text, isError) {
       message.textContent = text;
       message.className = isError ? "error" : "";
+      document.querySelectorAll(".field-highlight").forEach(node => node.classList.remove("field-highlight"));
+      document.getElementById("login-rate-message").textContent = "";
     }
 
+    // 오류 코드별로 손님에게 보일 문구와 강조할 자리 - 영어 오류 문장이나 코드는 화면에 쓰지 않는다
+    const wrongLogin = { text: "아이디나 비밀번호가 틀렸어요. 다시 생각해보세요.", target: "link-reset" };
+    const errorTable = {
+      "auth/invalid-credential": wrongLogin,
+      "auth/email-already-in-use": { text: "이 이메일은 사용할 수 없어요. 다른 이메일을 사용해봐요.", target: "email" },
+      "auth/weak-password": { text: "비밀번호가 너무 짧아요. 해킹이 두렵지 않으세요?", target: "password" },
+      "auth/invalid-email": wrongLogin
+    };
+    const fallbackError = { text: "문제가 생겼어요. 조금 뒤에 다시 시도해 주세요." };
+
     function showError(err) {
-      // 화면에는 오류 코드(auth/...)만 보여 준다
-      show(err && err.code ? err.code : "오류가 발생했습니다", true);
+      const found = (err && errorTable[err.code]) || fallbackError;
+      show(found.text, true);
+      if (found.target) document.getElementById(found.target).classList.add("field-highlight");
     }
 
     document.getElementById("btn-signup").addEventListener("click", async () => {
@@ -142,6 +158,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         const next = new URLSearchParams(location.search).get("next");
         if (next && /^[\w-]+\.html$/.test(next)) location.href = next;
       } catch (err) {
+        if (err && err.code === "auth/too-many-requests") {
+          // 로그인이 너무 잦으면 로그인 단추 아래에 안내를 보여 준다
+          show("", false);
+          document.getElementById("login-rate-message").textContent = "로그인 시도가 너무 잦아요. 쉬엄쉬엄 하세요.";
+          return;
+        }
         showError(err);
       }
     });
