@@ -23,6 +23,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     .login-box input { width: 100%; box-sizing: border-box; margin-top: 6px; padding: 10px; font-size: 16px; }
     .login-actions { display: flex; gap: 8px; margin-top: 20px; }
     .login-actions button { flex: 1; padding: 10px; font-size: 16px; cursor: pointer; }
+    .google-btn { width: 100%; margin-top: 8px; padding: 10px; font-size: 16px; cursor: pointer; }
     .login-reset { margin-top: 12px; font-size: 14px; }
     .login-reset a { text-decoration: underline; }
     .login-note { margin-top: 12px; font-size: 12px; color: #6b7280; }
@@ -65,6 +66,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <button type="submit" id="btn-login">로그인</button>
         <button type="button" id="btn-logout">로그아웃</button>
       </div>
+      <button type="button" id="btn-google" class="google-btn">Google로 계속하기</button>
       <p id="login-rate-message" role="status"></p>
       <p class="login-reset"><a href="#" id="link-reset">비밀번호를 잊으셨나요?</a></p>
       <p class="login-note">도서관이나 학교처럼 같이 쓰는 컴퓨터에서는, 간식상점을 다 보신 뒤 로그아웃을 눌러 주세요.</p>
@@ -78,6 +80,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       getAuth,
       createUserWithEmailAndPassword,
       signInWithEmailAndPassword,
+      GoogleAuthProvider,
+      signInWithPopup,
       sendEmailVerification,
       sendPasswordResetEmail,
       signOut
@@ -162,6 +166,22 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           // 로그인이 너무 잦으면 로그인 단추 아래에 안내를 보여 준다
           show("", false);
           document.getElementById("login-rate-message").textContent = "로그인 시도가 너무 잦아요. 쉬엄쉬엄 하세요.";
+          return;
+        }
+        showError(err);
+      }
+    });
+
+    // 구글 계정으로 들어가기 - 팝업 방식. 화면에는 구글 계정의 이름을 보여 준다
+    document.getElementById("btn-google").addEventListener("click", async () => {
+      try {
+        const cred = await signInWithPopup(auth, new GoogleAuthProvider());
+        show("로그인 완료: " + (cred.user.displayName || cred.user.email), false);
+        const next = new URLSearchParams(location.search).get("next");
+        if (next && /^[\w-]+\.html$/.test(next)) location.href = next;
+      } catch (err) {
+        if (err && (err.code === "auth/popup-closed-by-user" || err.code === "auth/cancelled-popup-request")) {
+          show("구글 창이 닫혀서 로그인이 취소됐어요.", true);
           return;
         }
         showError(err);
