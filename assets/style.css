@@ -834,3 +834,17 @@ footer.site {
     max-width: 110px;
   }
 }
+
+/* 헤더의 프로필 사진 (구글 계정) */
+.auth-photo {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: -10px;
+}
+@media (max-width: 768px) {
+  .auth-photo {
+    margin-right: -6px;
+  }
+}

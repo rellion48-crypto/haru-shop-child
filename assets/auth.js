@@ -42,6 +42,12 @@ function renderNav(user) {
     slot.appendChild(el("a", "로그인", { href: "login.html" }));
     return;
   }
+  // 구글 계정처럼 프로필 사진이 있으면 이메일 앞에 작고 동그랗게 보여 준다 (없으면 자리를 만들지 않는다)
+  if (user.photoURL) {
+    const photo = el("img", "", { class: "auth-photo", src: user.photoURL, alt: "", referrerpolicy: "no-referrer" });
+    photo.addEventListener("error", () => photo.remove());
+    slot.appendChild(photo);
+  }
   slot.appendChild(el("span", user.email, { class: "auth-email" }));
   slot.appendChild(el("a", "마이페이지", { href: "mypage.html" }));
   slot.appendChild(el("button", "로그아웃", { type: "button", class: "auth-logout", "data-logout": "" }));
